@@ -2,4 +2,22 @@
     "name": "drupal/fieldhelptext",
     "description": "Bulk editing UI for field help text.",
     "type": "drupal-module",
+    "homepage": "https://github.com/palantirnet/fieldhelptext",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Palantir.net",
+            "email": "white@palantir.net",
+            "homepage": "https://palantir.net",
+            "role": "Company"
+        },
+        {
+            "name": "Bec White",
+            "email": "white@palantir.net",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+      "drupal/drupal": "^7.0"
+    }
 }
