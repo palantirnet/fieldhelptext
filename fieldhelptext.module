@@ -1,0 +1,62 @@
+<?php
+/**
+ * @file
+ * Editor for field help text.
+ *
+ * @copyright (c) Copyright 2015 Palantir.net
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function fieldhelptext_menu() {
+  $items['admin/structure/fieldhelptext'] = array(
+    'title' => 'Field help text',
+    'description' => 'Edit field descriptions that are displayed when editing content.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('fieldhelptext_admin'),
+    'access arguments' => array('use fieldhelptext'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'fieldhelptext.admin.inc',
+  );
+  $items['admin/structure/fieldhelptext/by-bundle/%/%'] = array(
+    'title' => 'Field help text: edit by bundle',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('fieldhelptext_admin_bundle', 4, 5),
+    'access arguments' => array('use fieldhelptext'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'fieldhelptext.admin.inc',
+  );
+  $items['admin/structure/fieldhelptext/by-field/%'] = array(
+    'title' => 'Field help text: edit by field',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('fieldhelptext_admin_field', 4),
+    'access arguments' => array('use fieldhelptext'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'fieldhelptext.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function fieldhelptext_permission() {
+  return array(
+    'use fieldhelptext' => array(
+      'title' => t('Bulk edit field help text'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_theme().
+ */
+function fieldhelptext_theme() {
+  return array(
+    'fieldhelptext_admin' => array(
+      'render element' => 'element',
+      'file' => 'fieldhelptext.theme.inc',
+    ),
+  );
+}

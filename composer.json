@@ -1,0 +1,5 @@
+{
+    "name": "drupal/fieldhelptext",
+    "description": "Bulk editing UI for field help text.",
+    "type": "drupal-module",
+}
