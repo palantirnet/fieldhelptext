@@ -1,3 +1,6 @@
 # Field Help Text
 
-This is a Drupal 7 module to bulk edit field help text.
+This is a Drupal module to provide a UI for bulk editing field help text.
+
+----
+Copyright 2019 Palantir.net, Inc.

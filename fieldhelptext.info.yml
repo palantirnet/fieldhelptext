@@ -1,0 +1,5 @@
+name: Field Help Text
+description: Module to provide a bulk editing UI for field help text.
+
+type: module
+core: 8.x

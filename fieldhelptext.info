@@ -1,5 +1,0 @@
-; @copyright (c) Copyright 2015 Palantir.net
-
-name = Field Help Text
-description = Editor for field help text.
-core = 7.x
