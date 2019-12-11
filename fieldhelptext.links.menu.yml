@@ -1,0 +1,5 @@
+fieldhelptext:
+  title: 'Field Help Text UI'
+  parent: system.admin_structure
+  description: 'Update field help text across bundles.'
+  route_name: fieldhelptext

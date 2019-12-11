@@ -1,0 +1,3 @@
+use fieldhelptext:
+  title: 'Update field help text'
+  description: 'Use the FieldHelpText module to update field help text across all fieldable entities and bundles.'

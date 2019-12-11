@@ -1,0 +1,25 @@
+fieldhelptext:
+  path: '/admin/structure/fieldhelptext'
+  defaults:
+    _controller: '\Drupal\fieldhelptext\Controller\FieldhelptextController::main'
+  requirements:
+    _permission: 'use fieldhelptext'
+
+fieldhelptext.bundle:
+  path: '/admin/structure/fieldhelptext/by-bundle/{entity_type}/{bundle}'
+  defaults:
+    _title: 'Edit Bundle Help Text'
+    _form: '\Drupal\fieldhelptext\Form\Bundle'
+  requirements:
+    _permission: 'use fieldhelptext'
+    entity_type: '[a-zA-Z]+'
+    bundle: '[a-zA-Z]+'
+
+fieldhelptext.field:
+  path: '/admin/structure/fieldhelptext/by-field/{entity_type}/{field_name}'
+  defaults:
+    _controller: '\Drupal\fieldhelptext\Controller\FieldhelptextController::field'
+  requirements:
+    _permission: 'use fieldhelptext'
+    entity_type: '[a-zA-Z]+'
+    field_name: '[a-zA-Z]+'

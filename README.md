@@ -1,4 +1,4 @@
-# Field Help Text
+# FieldHelpText
 
 This is a Drupal module to provide a UI for bulk editing field help text.
 
