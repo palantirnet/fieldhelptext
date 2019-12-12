@@ -16,6 +16,8 @@ fieldhelptext.bundle:
     parameters:
       entity_type:
         type: entity_type
+      bundle:
+        type: bundle
 
 fieldhelptext.field:
   path: '/admin/structure/fieldhelptext/by-field/{entity_type}/{field_name}'

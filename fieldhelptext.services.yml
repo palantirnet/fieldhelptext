@@ -4,3 +4,8 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@entity_type.manager']
+  fieldhelptext.paramconverter.bundle:
+    class: '\Drupal\fieldhelptext\ParamConverter\BundleConverter'
+    tags:
+      - { name: paramconverter }
+    arguments: ['@entity_type.bundle.info']
