@@ -8,7 +8,7 @@ fieldhelptext:
 fieldhelptext.bundle:
   path: '/admin/structure/fieldhelptext/by-bundle/{entity_type}/{bundle}'
   defaults:
-    _title: 'Edit Bundle Help Text'
+    _title: 'Edit help text for all fields on bundle'
     _form: '\Drupal\fieldhelptext\Form\Bundle'
   requirements:
     _permission: 'use fieldhelptext'
@@ -18,7 +18,8 @@ fieldhelptext.bundle:
 fieldhelptext.field:
   path: '/admin/structure/fieldhelptext/by-field/{entity_type}/{field_name}'
   defaults:
-    _controller: '\Drupal\fieldhelptext\Controller\FieldhelptextController::field'
+    _title: 'Edit field help text across bundles'
+    _form: '\Drupal\fieldhelptext\Form\Field'
   requirements:
     _permission: 'use fieldhelptext'
     entity_type: '[a-zA-Z]+'
