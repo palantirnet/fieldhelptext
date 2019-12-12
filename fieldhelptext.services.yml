@@ -1,0 +1,6 @@
+services:
+  fieldhelptext.paramconverter.entity_type:
+    class: '\Drupal\fieldhelptext\ParamConverter\EntityTypeConverter'
+    tags:
+      - { name: paramconverter }
+    arguments: ['@entity_type.manager']

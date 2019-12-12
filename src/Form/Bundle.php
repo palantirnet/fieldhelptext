@@ -7,6 +7,7 @@
 namespace Drupal\fieldhelptext\Form;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -29,12 +30,12 @@ class Bundle extends FormBase {
    * Provide a form with a text area for updating the description associated
    * with each non-base field.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type = '', $bundle = '') {
+  public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = null, $bundle = '') {
     /** @var EntityFieldManagerInterface $entity_field_manager */
     $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
 
-    $all_fields = $entity_field_manager->getFieldDefinitions($entity_type, $bundle);
-    $base_fields = $entity_field_manager->getBaseFieldDefinitions($entity_type);
+    $all_fields = $entity_field_manager->getFieldDefinitions($entity_type->id(), $bundle);
+    $base_fields = $entity_field_manager->getBaseFieldDefinitions($entity_type->id());
 
     /** @var FieldDefinitionInterface[] $fields */
     $fields = array_diff_key($all_fields, $base_fields);
@@ -42,7 +43,7 @@ class Bundle extends FormBase {
     $form['fieldhelptext'] = [
       '#type' => 'value',
       '#value' => [
-        'entity_type' => $entity_type,
+        'entity_type' => $entity_type->id(),
         'bundle' => $bundle,
         'field_names' => array_keys($fields),
       ],
@@ -53,7 +54,7 @@ class Bundle extends FormBase {
       '#tag' => 'h3',
       '#value' => $this->t('Edit help text for %bundle_name @entity_type fields', [
         '%bundle_name' => $bundle,
-        '@entity_type' => $entity_type,
+        '@entity_type' => $entity_type->id(),
       ]),
     ];
 

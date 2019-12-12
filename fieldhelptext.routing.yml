@@ -12,8 +12,10 @@ fieldhelptext.bundle:
     _form: '\Drupal\fieldhelptext\Form\Bundle'
   requirements:
     _permission: 'use fieldhelptext'
-    entity_type: '[a-zA-Z_]+'
-    bundle: '[a-zA-Z_]+'
+  options:
+    parameters:
+      entity_type:
+        type: entity_type
 
 fieldhelptext.field:
   path: '/admin/structure/fieldhelptext/by-field/{entity_type}/{field_name}'
