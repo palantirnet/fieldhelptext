@@ -37,6 +37,8 @@ class FieldhelptextController extends ControllerBase {
       }
     }
 
+    $map = $entity_field_manager->getFieldMap();
+
     // List of links to administer by bundle
     foreach ($fieldable_entity_types as $entity_type_name => $entity_type) {
       $output['bundle']["{$entity_type_name}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type_name];
@@ -58,6 +60,27 @@ class FieldhelptextController extends ControllerBase {
 
     // List of links to administer by field
     // Count number of times field is used
+    foreach ($map as $entity_type => $fields) {
+      $base_fields = $entity_field_manager->getBaseFieldDefinitions($entity_type);
+      $configurable_fields = array_diff_key($fields, $base_fields);
+
+      $output['field']["{$entity_type}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type];
+
+      $output['field']["{$entity_type}"] = [
+        '#type' => 'html_tag',
+        '#tag' => 'ul',
+      ];
+
+      foreach ($configurable_fields as $field => $info) {
+        $output['field']["{$entity_type}"][] = [
+          '#type' => 'html_tag',
+          '#tag' => 'li',
+          '#value' => Link::createFromRoute($this->t('@field_name (%field_type)', ['@field_name' => $field, '%field_type' => $info['type']]), 'fieldhelptext.field', ['entity_type' => $entity_type, 'field_name' => $field])->toString(),
+        ];
+
+      }
+    }
+
 
     return $output;
   }
