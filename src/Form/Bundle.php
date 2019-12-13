@@ -54,7 +54,7 @@ class Bundle extends FormBase {
       '#tag' => 'h3',
       '#value' => $this->t('Edit help text for %bundle_name @entity_type fields', [
         '%bundle_name' => $bundle,
-        '@entity_type' => $entity_type->id(),
+        '@entity_type' => $entity_type->getLabel(),
       ]),
     ];
 
