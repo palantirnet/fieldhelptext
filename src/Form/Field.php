@@ -8,7 +8,6 @@ namespace Drupal\fieldhelptext\Form;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -137,21 +136,6 @@ class Field extends FormBase {
         $configs[$bundle]->setLabel($label);
         $configs[$bundle]->set('description', $description);
         $configs[$bundle]->save();
-      }
-    }
-
-    return;
-
-    /** @var FieldDefinitionInterface[] $field_definitions */
-    $field_definitions = $entity_field_manager->getFieldDefinitions($params['entity_type'], $params['bundle']);
-
-    foreach ($params['field_names'] as $field_name) {
-      $field_config = $field_definitions[$field_name]->getConfig($params['bundle']);
-
-      // Only update fields that have been changed.
-      if ($field_config->get('description') != $form_state->getValue($field_name)) {
-        $field_config->set('description', $form_state->getValue($field_name));
-        $field_config->save();
       }
     }
   }
