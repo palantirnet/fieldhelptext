@@ -26,5 +26,7 @@ fieldhelptext.field:
     _form: '\Drupal\fieldhelptext\Form\Field'
   requirements:
     _permission: 'use fieldhelptext'
-    entity_type: '[a-zA-Z_]+'
-    field_name: '[a-zA-Z_]+'
+  options:
+    parameters:
+      entity_type:
+        type: entity_type

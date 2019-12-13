@@ -7,6 +7,7 @@
 namespace Drupal\fieldhelptext\Form;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -29,22 +30,22 @@ class Field extends FormBase {
    * Provide a form with a text area for updating the description associated
    * with each non-base field.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, $entity_type = '', $field_name = '') {
+  public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = NULL, $field_name = '') {
     /** @var EntityFieldManagerInterface $entity_field_manager */
     $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
 
-    $map = $entity_field_manager->getFieldMap()[$entity_type];
+    $map = $entity_field_manager->getFieldMap()[$entity_type->id()];
 
     /** @var \Drupal\Core\Field\FieldConfigInterface[] $configs */
     $configs = [];
     foreach ($map[$field_name]['bundles'] as $bundle) {
-      $configs[$bundle] = $entity_field_manager->getFieldDefinitions($entity_type, $bundle)[$field_name]->getConfig($bundle);
+      $configs[$bundle] = $entity_field_manager->getFieldDefinitions($entity_type->id(), $bundle)[$field_name]->getConfig($bundle);
     }
 
     $form['fieldhelptext'] = [
       '#type' => 'value',
       '#value' => [
-        'entity_type' => $entity_type,
+        'entity_type' => $entity_type->id(),
         'field_name' => $field_name,
         'bundles' => $map[$field_name]['bundles'],
       ],
@@ -55,7 +56,7 @@ class Field extends FormBase {
       '#tag' => 'h3',
       '#value' => $this->t('Edit help text for %field_name across all @entity_type bundles', [
         '%field_name' => $field_name,
-        '@entity_type' => $entity_type,
+        '@entity_type' => $entity_type->getLabel(),
       ]),
     ];
 
@@ -73,7 +74,7 @@ class Field extends FormBase {
 
     $form['apply_to'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Update %entity_type field instances', ['%entity_type' => $entity_type]),
+      '#title' => $this->t('Update %entity_type field instances', ['%entity_type' => $entity_type->getLabel()]),
       '#options' => [],
     ];
 
