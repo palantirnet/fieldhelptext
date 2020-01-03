@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright 2019 Palantir.net, Inc.
+ * @copyright Copyright 2019, 2020 Palantir.net, Inc.
  */
 
 namespace Drupal\fieldhelptext\Form;
@@ -10,11 +10,31 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for editing help text everywhere a field appears.
  */
 class Field extends FormBase {
+
+  /** @var EntityFieldManagerInterface */
+  protected $entityFieldManager;
+
+  /**
+   * Constructs a new Field form object.
+   *
+   * @param EntityFieldManagerInterface $entity_field_manager
+   */
+  public function __construct(EntityFieldManagerInterface $entityFieldManager) {
+    $this->entityFieldManager = $entityFieldManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('entity_field.manager'));
+  }
 
   /**
    * {@inheritdoc}
@@ -30,16 +50,12 @@ class Field extends FormBase {
    * with each non-base field.
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = NULL, $field_name = '') {
-    /** @var EntityFieldManagerInterface $entity_field_manager */
-    // @todo use dependency injection to get this service
-    $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
-
-    $map = $entity_field_manager->getFieldMap()[$entity_type->id()];
+    $map = $this->entityFieldManager->getFieldMap()[$entity_type->id()];
 
     /** @var \Drupal\Core\Field\FieldConfigInterface[] $configs */
     $configs = [];
     foreach ($map[$field_name]['bundles'] as $bundle) {
-      $configs[$bundle] = $entity_field_manager->getFieldDefinitions($entity_type->id(), $bundle)[$field_name]->getConfig($bundle);
+      $configs[$bundle] = $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle)[$field_name]->getConfig($bundle);
     }
 
     $form['fieldhelptext'] = [
@@ -118,14 +134,10 @@ class Field extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state, $foo = '') {
     $params = $form_state->getValue('fieldhelptext');
 
-    /** @var EntityFieldManagerInterface $entity_field_manager */
-    // @todo use dependency injection to get this service
-    $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
-
     /** @var \Drupal\Core\Field\FieldConfigInterface[] $configs */
     $configs = [];
     foreach ($params['bundles'] as $bundle) {
-      $configs[$bundle] = $entity_field_manager->getFieldDefinitions($params['entity_type'], $bundle)[$params['field_name']]->getConfig($bundle);
+      $configs[$bundle] = $this->entityFieldManager->getFieldDefinitions($params['entity_type'], $bundle)[$params['field_name']]->getConfig($bundle);
     }
 
     $apply_to = array_filter($form_state->getValue('apply_to'));
