@@ -84,6 +84,7 @@ class Bundle extends FormBase {
 
     // @todo ensure fields are sorted by the form display order
     foreach ($fields as $field_name => $field) {
+      // @todo should this form also allow updating the field label? (the Field form does)
       $form[$field_name] = [
         '#type' => 'textarea',
         '#title' => $field->getLabel(),
