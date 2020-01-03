@@ -10,6 +10,8 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\Messenger;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -25,15 +27,16 @@ class Field extends FormBase {
    *
    * @param EntityFieldManagerInterface $entity_field_manager
    */
-  public function __construct(EntityFieldManagerInterface $entityFieldManager) {
+  public function __construct(EntityFieldManagerInterface $entityFieldManager, Messenger $messenger) {
     $this->entityFieldManager = $entityFieldManager;
+    $this->setMessenger($messenger);
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('entity_field.manager'));
+    return new static($container->get('entity_field.manager'), $container->get('messenger'));
   }
 
   /**
@@ -150,6 +153,11 @@ class Field extends FormBase {
         $configs[$bundle]->setLabel($label);
         $configs[$bundle]->set('description', $description);
         $configs[$bundle]->save();
+        $this->messenger->addStatus(new TranslatableMarkup('Updated text for @bundle @entity field %field_name', [
+          '@bundle' => $bundle,
+          '@entity' => $params['entity_type'],
+          '%field_name' => $params['field_name'],
+        ]));
       }
     }
   }
