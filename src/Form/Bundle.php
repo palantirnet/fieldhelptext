@@ -11,11 +11,33 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\Messenger;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for editing help text for all fields on a bundle.
  */
 class Bundle extends FormBase {
+
+  /** @var EntityFieldManagerInterface */
+  protected $entityFieldManager;
+
+  /**
+   * Constructs a new Field form object.
+   *
+   * @param EntityFieldManagerInterface $entity_field_manager
+   */
+  public function __construct(EntityFieldManagerInterface $entityFieldManager, Messenger $messenger) {
+    $this->entityFieldManager = $entityFieldManager;
+    $this->setMessenger($messenger);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('entity_field.manager'), $container->get('messenger'));
+  }
 
   /**
    * {@inheritdoc}
@@ -31,12 +53,8 @@ class Bundle extends FormBase {
    * with each non-base field.
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = null, $bundle = '') {
-    /** @var EntityFieldManagerInterface $entity_field_manager */
-    // @todo use dependency injection to get this service
-    $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
-
-    $all_fields = $entity_field_manager->getFieldDefinitions($entity_type->id(), $bundle);
-    $base_fields = $entity_field_manager->getBaseFieldDefinitions($entity_type->id());
+    $all_fields = $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
+    $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type->id());
 
     /** @var FieldDefinitionInterface[] $fields */
     $fields = array_diff_key($all_fields, $base_fields);
@@ -89,11 +107,8 @@ class Bundle extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state, $foo = '') {
     $params = $form_state->getValue('fieldhelptext');
 
-    /** @var EntityFieldManagerInterface $entity_field_manager */
-    // @todo use dependency injection
-    $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
     /** @var FieldDefinitionInterface[] $field_definitions */
-    $field_definitions = $entity_field_manager->getFieldDefinitions($params['entity_type'], $params['bundle']);
+    $field_definitions = $this->entityFieldManager->getFieldDefinitions($params['entity_type'], $params['bundle']);
 
     foreach ($params['field_names'] as $field_name) {
       $field_config = $field_definitions[$field_name]->getConfig($params['bundle']);
