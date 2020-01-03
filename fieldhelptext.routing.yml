@@ -5,6 +5,7 @@ fieldhelptext:
   requirements:
     _permission: 'use fieldhelptext'
 
+# @todo consider using config entities instead of the entity type/bundle themselves
 fieldhelptext.bundle:
   path: '/admin/structure/fieldhelptext/by-bundle/{entity_type}/{bundle}'
   defaults:
@@ -19,6 +20,7 @@ fieldhelptext.bundle:
       bundle:
         type: bundle
 
+# @todo consider using config entities instead of the entity type/bundle themselves
 fieldhelptext.field:
   path: '/admin/structure/fieldhelptext/by-field/{entity_type}/{field_name}'
   defaults:

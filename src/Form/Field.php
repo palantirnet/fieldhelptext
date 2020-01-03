@@ -31,6 +31,7 @@ class Field extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = NULL, $field_name = '') {
     /** @var EntityFieldManagerInterface $entity_field_manager */
+    // @todo use dependency injection to get this service
     $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
 
     $map = $entity_field_manager->getFieldMap()[$entity_type->id()];
@@ -118,6 +119,7 @@ class Field extends FormBase {
     $params = $form_state->getValue('fieldhelptext');
 
     /** @var EntityFieldManagerInterface $entity_field_manager */
+    // @todo use dependency injection to get this service
     $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
 
     /** @var \Drupal\Core\Field\FieldConfigInterface[] $configs */

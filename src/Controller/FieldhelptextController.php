@@ -21,6 +21,7 @@ class FieldhelptextController extends ControllerBase {
       ],
     ];
 
+    // @todo use dependency injection
     /** @var EntityTypeManagerInterface $entity_type_manager */
     $entity_type_manager = \Drupal::getContainer()->get('entity_type.manager');
     /** @var EntityFieldManagerInterface $entity_field_manager */
@@ -80,7 +81,6 @@ class FieldhelptextController extends ControllerBase {
 
       }
     }
-
 
     return $output;
   }

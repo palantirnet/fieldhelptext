@@ -32,6 +32,7 @@ class Bundle extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = null, $bundle = '') {
     /** @var EntityFieldManagerInterface $entity_field_manager */
+    // @todo use dependency injection to get this service
     $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
 
     $all_fields = $entity_field_manager->getFieldDefinitions($entity_type->id(), $bundle);
@@ -88,6 +89,7 @@ class Bundle extends FormBase {
     $params = $form_state->getValue('fieldhelptext');
 
     /** @var EntityFieldManagerInterface $entity_field_manager */
+    // @todo use dependency injection
     $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
     /** @var FieldDefinitionInterface[] $field_definitions */
     $field_definitions = $entity_field_manager->getFieldDefinitions($params['entity_type'], $params['bundle']);
