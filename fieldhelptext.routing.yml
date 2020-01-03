@@ -32,3 +32,5 @@ fieldhelptext.field:
     parameters:
       entity_type:
         type: entity_type
+      field_name:
+        type: field_name

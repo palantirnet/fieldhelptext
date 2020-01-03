@@ -9,9 +9,8 @@ services:
     tags:
       - { name: paramconverter }
     arguments: ['@entity_type.bundle.info']
-  # @todo add a field_name param converter
   fieldhelptext.paramconverter.field_name:
-    class: '\Drupal\fieldhelptext\ParamConverter\BundleConverter'
+    class: '\Drupal\fieldhelptext\ParamConverter\FieldNameConverter'
     tags:
       - { name: paramconverter }
-    arguments: ['@entity_type.bundle.info']
+    arguments: ['@entity_field.manager']
