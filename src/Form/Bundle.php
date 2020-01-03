@@ -12,6 +12,7 @@ use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\Messenger;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -117,7 +118,12 @@ class Bundle extends FormBase {
       if ($field_config->get('description') != $form_state->getValue($field_name)) {
         $field_config->set('description', $form_state->getValue($field_name));
         $field_config->save();
-        // @todo add message when text is updated.
+
+        $this->messenger->addStatus(new TranslatableMarkup('Updated text for @bundle @entity field %field_name', [
+          '@bundle' => $params['bundle'],
+          '@entity' => $params['entity_type'],
+          '%field_name' => $field_name,
+        ]));
       }
     }
   }
