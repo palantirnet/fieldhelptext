@@ -63,6 +63,7 @@ class Bundle extends FormBase {
       '#markup' => '<p>Allowed HTML tags: &lt;a&gt; &lt;b&gt; &lt;big&gt; &lt;code&gt; &lt;del&gt; &lt;em&gt; &lt;i&gt; &lt;ins&gt; &lt;pre&gt; &lt;q&gt; &lt;small&gt; &lt;span&gt; &lt;strong&gt; &lt;sub&gt; &lt;sup&gt; &lt;tt&gt; &lt;ol&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt; &lt;br&gt; &lt;img&gt;</p><p>These fields support tokens.</p>'
     ];
 
+    // @todo ensure fields are sorted by the form display order
     foreach ($fields as $field_name => $field) {
       $form[$field_name] = [
         '#type' => 'textarea',
@@ -101,6 +102,7 @@ class Bundle extends FormBase {
       if ($field_config->get('description') != $form_state->getValue($field_name)) {
         $field_config->set('description', $form_state->getValue($field_name));
         $field_config->save();
+        // @todo add message when text is updated.
       }
     }
   }
