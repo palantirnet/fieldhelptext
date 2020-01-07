@@ -6,6 +6,7 @@
 
 namespace Drupal\fieldhelptext\Form;
 
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -82,7 +83,11 @@ class Bundle extends FormBase {
       '#markup' => '<p>Allowed HTML tags: &lt;a&gt; &lt;b&gt; &lt;big&gt; &lt;code&gt; &lt;del&gt; &lt;em&gt; &lt;i&gt; &lt;ins&gt; &lt;pre&gt; &lt;q&gt; &lt;small&gt; &lt;span&gt; &lt;strong&gt; &lt;sub&gt; &lt;sup&gt; &lt;tt&gt; &lt;ol&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt; &lt;br&gt; &lt;img&gt;</p><p>These fields support tokens.</p>'
     ];
 
-    // @todo ensure fields are sorted by the form display order
+    // Retrieve the default form display in order to sort fields in the order
+    // they appear on the form.
+    $display = EntityFormDisplay::load(join('.', [$entity_type->id(), $bundle, 'default']));
+    $components = $display->getComponents();
+
     foreach ($fields as $field_name => $field) {
       // @todo should this form also allow updating the field label? (the Field form does)
       $form[$field_name] = [
@@ -91,13 +96,16 @@ class Bundle extends FormBase {
         '#default_value' => $field->getDescription(),
         '#description' => $this->t('Field type: %type', ['%type' => $field->getType()]),
         '#rows' => 2,
+        '#weight' => isset($components[$field_name]['weight']) ? $components[$field_name]['weight'] : 998,
       ];
     }
 
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Update help text'),
+      '#weight' => 999,
     ];
+
     return $form;
   }
 
