@@ -87,8 +87,11 @@ class FieldhelptextController extends ControllerBase {
       $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type);
       $configurable_fields = array_diff_key($fields, $base_fields);
 
-      $output['field']["{$entity_type}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type];
+      if (empty($configurable_fields)) {
+        continue;
+      }
 
+      $output['field']["{$entity_type}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type];
       $output['field']["{$entity_type}"] = [
         '#type' => 'html_tag',
         '#tag' => 'ul',
