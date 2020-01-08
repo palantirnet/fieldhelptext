@@ -79,18 +79,18 @@ class FieldhelptextController extends ControllerBase {
     $all_entity_types = $this->entityTypeManager->getDefinitions();
     /** @var \Drupal\Core\Entity\ContentEntityTypeInterface[] $fieldable_entity_types */
     $fieldable_entity_types = [];
-    foreach ($all_entity_types as $entity_type_name => $entity_type) {
+    foreach ($all_entity_types as $entity_type_id => $entity_type) {
       if (is_a($entity_type->getClass(), '\Drupal\Core\Entity\FieldableEntityInterface', TRUE)) {
-        $bundles = $this->bundleInfoManager->getBundleInfo($entity_type_name);
-        $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_name);
+        $bundles = $this->bundleInfoManager->getBundleInfo($entity_type_id);
+        $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_id);
 
         foreach (array_keys($bundles) as $bundle) {
-          $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_name, $bundle);
+          $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
           /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
           $bundle_fields = array_diff_key($all_bundle_fields, $base_fields);
 
           if (!empty($bundle_fields)) {
-            $fieldable_entity_types[$entity_type_name][] = $bundle;
+            $fieldable_entity_types[$entity_type_id][] = $bundle;
           }
         }
 
@@ -100,20 +100,20 @@ class FieldhelptextController extends ControllerBase {
     $map = $this->entityFieldManager->getFieldMap();
 
     // List of links to administer by bundle.
-    foreach ($fieldable_entity_types as $entity_type_name => $bundles) {
-      $output['bundle']["{$entity_type_name}__title"] = [
+    foreach ($fieldable_entity_types as $entity_type_id => $bundles) {
+      $output['bundle']["{$entity_type_id}__title"] = [
         '#type' => 'html_tag',
         '#tag' => 'h3',
-        '#value' => $entity_type_name,
+        '#value' => $entity_type_id,
       ];
 
-      $output['bundle']["{$entity_type_name}"] = [
+      $output['bundle']["{$entity_type_id}"] = [
         '#type' => 'html_tag',
         '#tag' => 'ul',
       ];
 
       foreach ($bundles as $bundle) {
-        $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_name, $bundle);
+        $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_id, $bundle);
         /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
         $bundle_fields = array_diff_key($all_bundle_fields, $base_fields);
 
@@ -121,10 +121,10 @@ class FieldhelptextController extends ControllerBase {
           continue;
         }
 
-        $output['bundle']["{$entity_type_name}"][] = [
+        $output['bundle']["{$entity_type_id}"][] = [
           '#type' => 'html_tag',
           '#tag' => 'li',
-          '#value' => Link::createFromRoute($bundle, 'fieldhelptext.bundle', ['entity_type' => $entity_type_name, 'bundle' => $bundle])->toString(),
+          '#value' => Link::createFromRoute($bundle, 'fieldhelptext.bundle', ['entity_type' => $entity_type_id, 'bundle' => $bundle])->toString(),
         ];
       }
     }
