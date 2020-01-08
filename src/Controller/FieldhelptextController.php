@@ -1,33 +1,41 @@
 <?php
 
+/**
+ * @copyright Copyright 2019, 2020 Palantir.net, Inc.
+ */
+
 namespace Drupal\fieldhelptext\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FieldhelptextController extends ControllerBase {
 
-  /** @var EntityTypeManagerInterface */
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
   protected $entityTypeManager;
 
-  /** @var EntityFieldManagerInterface */
+  /**
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
   protected $entityFieldManager;
 
-  /** @var EntityTypeBundleInfoInterface */
+  /**
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
   protected $bundleInfoManager;
 
   /**
    * FieldhelptextController constructor.
    *
-   * @param EntityTypeManagerInterface $entityTypeManager
-   * @param EntityFieldManagerInterface $entityFieldManager
-   * @param EntityTypeBundleInfoInterface $bundleInfoManager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfoManager
    */
   public function __construct(EntityTypeManagerInterface $entityTypeManager, EntityFieldManagerInterface $entityFieldManager, EntityTypeBundleInfoInterface $bundleInfoManager) {
     $this->entityTypeManager = $entityTypeManager;
@@ -53,7 +61,7 @@ class FieldhelptextController extends ControllerBase {
     ];
 
     $all_entity_types = $this->entityTypeManager->getDefinitions();
-    /** @var ContentEntityTypeInterface[] $fieldable_entity_types */
+    /** @var \Drupal\Core\Entity\ContentEntityTypeInterface[] $fieldable_entity_types */
     $fieldable_entity_types = [];
     foreach ($all_entity_types as $entity_type_name => $entity_type) {
       if (is_a($entity_type->getClass(), '\Drupal\Core\Entity\FieldableEntityInterface', TRUE)) {
@@ -62,7 +70,7 @@ class FieldhelptextController extends ControllerBase {
 
         foreach (array_keys($bundles) as $bundle) {
           $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_name, $bundle);
-          /** @var FieldDefinitionInterface[] $fields */
+          /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
           $bundle_fields = array_diff_key($all_bundle_fields, $base_fields);
 
           if (!empty($bundle_fields)) {
@@ -75,7 +83,7 @@ class FieldhelptextController extends ControllerBase {
 
     $map = $this->entityFieldManager->getFieldMap();
 
-    // List of links to administer by bundle
+    // List of links to administer by bundle.
     foreach ($fieldable_entity_types as $entity_type_name => $bundles) {
       $output['bundle']["{$entity_type_name}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type_name];
 
@@ -86,7 +94,7 @@ class FieldhelptextController extends ControllerBase {
 
       foreach ($bundles as $bundle) {
         $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_name, $bundle);
-        /** @var FieldDefinitionInterface[] $fields */
+        /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
         $bundle_fields = array_diff_key($all_bundle_fields, $base_fields);
 
         if (empty($bundle_fields)) {
@@ -102,7 +110,6 @@ class FieldhelptextController extends ControllerBase {
     }
 
     // List of links to administer by field
-    // Count number of times field is used
     foreach ($map as $entity_type => $fields) {
       $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type);
       $configurable_fields = array_diff_key($fields, $base_fields);

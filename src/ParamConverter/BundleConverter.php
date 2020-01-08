@@ -7,7 +7,6 @@
 namespace Drupal\fieldhelptext\ParamConverter;
 
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\ParamConverter\ParamConverterInterface;
 use Symfony\Component\Routing\Route;
 
@@ -17,7 +16,7 @@ use Symfony\Component\Routing\Route;
 class BundleConverter implements ParamConverterInterface {
 
   /**
-   * @var EntityTypeBundleInfoInterface
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $bundleInfo;
 
@@ -32,8 +31,10 @@ class BundleConverter implements ParamConverterInterface {
    * {@inheritdoc}
    */
   public function convert($value, $definition, $name, array $defaults) {
-    /** @var EntityTypeInterface $entity_type */
-    $entity_type = array_reduce($defaults, function($carry, $item) { return is_a($item, '\Drupal\Core\Entity\EntityTypeInterface') ? $item : $carry; });
+    /** @var \Drupal\Core\Entity\EntityTypeInterface $entity_type */
+    $entity_type = array_reduce($defaults, function ($carry, $item) {
+      return is_a($item, '\Drupal\Core\Entity\EntityTypeInterface') ? $item : $carry;
+    });
 
     $bundles = $this->bundleInfo->getBundleInfo($entity_type->id());
 

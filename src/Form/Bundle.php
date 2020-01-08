@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright 2019 Palantir.net, Inc.
+ * @copyright Copyright 2019, 2020 Palantir.net, Inc.
  */
 
 namespace Drupal\fieldhelptext\Form;
@@ -9,7 +9,6 @@ namespace Drupal\fieldhelptext\Form;
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\Messenger;
@@ -21,13 +20,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Bundle extends FormBase {
 
-  /** @var EntityFieldManagerInterface */
+  /**
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
   protected $entityFieldManager;
 
   /**
    * Constructs a new Field form object.
    *
-   * @param EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    */
   public function __construct(EntityFieldManagerInterface $entityFieldManager, Messenger $messenger) {
     $this->entityFieldManager = $entityFieldManager;
@@ -54,11 +55,11 @@ class Bundle extends FormBase {
    * Provide a form with a text area for updating the description associated
    * with each non-base field.
    */
-  public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = null, $bundle = '') {
+  public function buildForm(array $form, FormStateInterface $form_state, EntityTypeInterface $entity_type = NULL, $bundle = '') {
     $all_fields = $this->entityFieldManager->getFieldDefinitions($entity_type->id(), $bundle);
     $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type->id());
 
-    /** @var FieldDefinitionInterface[] $fields */
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $fields */
     $fields = array_diff_key($all_fields, $base_fields);
 
     $form['fieldhelptext'] = [
@@ -80,7 +81,7 @@ class Bundle extends FormBase {
     ];
 
     $form['intro'] = [
-      '#markup' => '<p>Allowed HTML tags: &lt;a&gt; &lt;b&gt; &lt;big&gt; &lt;code&gt; &lt;del&gt; &lt;em&gt; &lt;i&gt; &lt;ins&gt; &lt;pre&gt; &lt;q&gt; &lt;small&gt; &lt;span&gt; &lt;strong&gt; &lt;sub&gt; &lt;sup&gt; &lt;tt&gt; &lt;ol&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt; &lt;br&gt; &lt;img&gt;</p><p>These fields support tokens.</p>'
+      '#markup' => '<p>Allowed HTML tags: &lt;a&gt; &lt;b&gt; &lt;big&gt; &lt;code&gt; &lt;del&gt; &lt;em&gt; &lt;i&gt; &lt;ins&gt; &lt;pre&gt; &lt;q&gt; &lt;small&gt; &lt;span&gt; &lt;strong&gt; &lt;sub&gt; &lt;sup&gt; &lt;tt&gt; &lt;ol&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt; &lt;br&gt; &lt;img&gt;</p><p>These fields support tokens.</p>',
     ];
 
     // Retrieve the default form display in order to sort fields in the order
@@ -119,7 +120,7 @@ class Bundle extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state, $foo = '') {
     $params = $form_state->getValue('fieldhelptext');
 
-    /** @var FieldDefinitionInterface[] $field_definitions */
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface[] $field_definitions */
     $field_definitions = $this->entityFieldManager->getFieldDefinitions($params['entity_type'], $params['bundle']);
 
     foreach ($params['field_names'] as $field_name) {

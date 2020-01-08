@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Route;
 class EntityTypeConverter implements ParamConverterInterface {
 
   /**
-   * @var EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
@@ -35,7 +35,7 @@ class EntityTypeConverter implements ParamConverterInterface {
       return $this->entityTypeManager->getDefinition($value);
     }
     catch (\Exception $e) {
-      return null;
+      return NULL;
     }
   }
 

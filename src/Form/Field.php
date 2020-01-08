@@ -19,13 +19,15 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Field extends FormBase {
 
-  /** @var EntityFieldManagerInterface */
+  /**
+   * @var \Drupal\Core\Entity\EntityFieldManagerInterface
+   */
   protected $entityFieldManager;
 
   /**
    * Constructs a new Field form object.
    *
-   * @param EntityFieldManagerInterface $entity_field_manager
+   * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
    */
   public function __construct(EntityFieldManagerInterface $entityFieldManager, Messenger $messenger) {
     $this->entityFieldManager = $entityFieldManager;
