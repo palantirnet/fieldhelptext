@@ -7,6 +7,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -56,14 +57,26 @@ class FieldhelptextController extends ControllerBase {
     $fieldable_entity_types = [];
     foreach ($all_entity_types as $entity_type_name => $entity_type) {
       if (is_a($entity_type->getClass(), '\Drupal\Core\Entity\FieldableEntityInterface', TRUE)) {
-        $fieldable_entity_types[$entity_type_name] = $entity_type;
+        $bundles = $this->bundleInfoManager->getBundleInfo($entity_type_name);
+        $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type_name);
+
+        foreach (array_keys($bundles) as $bundle) {
+          $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_name, $bundle);
+          /** @var FieldDefinitionInterface[] $fields */
+          $bundle_fields = array_diff_key($all_bundle_fields, $base_fields);
+
+          if (!empty($bundle_fields)) {
+            $fieldable_entity_types[$entity_type_name][] = $bundle;
+          }
+        }
+
       }
     }
 
     $map = $this->entityFieldManager->getFieldMap();
 
     // List of links to administer by bundle
-    foreach ($fieldable_entity_types as $entity_type_name => $entity_type) {
+    foreach ($fieldable_entity_types as $entity_type_name => $bundles) {
       $output['bundle']["{$entity_type_name}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type_name];
 
       $output['bundle']["{$entity_type_name}"] = [
@@ -71,12 +84,19 @@ class FieldhelptextController extends ControllerBase {
         '#tag' => 'ul',
       ];
 
-      $bundles = $this->bundleInfoManager->getBundleInfo($entity_type_name);
-      foreach ($bundles as $bundle => $info) {
+      foreach ($bundles as $bundle) {
+        $all_bundle_fields = $this->entityFieldManager->getFieldDefinitions($entity_type_name, $bundle);
+        /** @var FieldDefinitionInterface[] $fields */
+        $bundle_fields = array_diff_key($all_bundle_fields, $base_fields);
+
+        if (empty($bundle_fields)) {
+          continue;
+        }
+
         $output['bundle']["{$entity_type_name}"][] = [
           '#type' => 'html_tag',
           '#tag' => 'li',
-          '#value' => Link::createFromRoute($info['label'], 'fieldhelptext.bundle', ['entity_type' => $entity_type_name, 'bundle' => $bundle])->toString(),
+          '#value' => Link::createFromRoute($bundle, 'fieldhelptext.bundle', ['entity_type' => $entity_type_name, 'bundle' => $bundle])->toString(),
         ];
       }
     }
