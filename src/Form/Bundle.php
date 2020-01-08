@@ -85,8 +85,10 @@ class Bundle extends FormBase {
 
     // Retrieve the default form display in order to sort fields in the order
     // they appear on the form.
-    $display = EntityFormDisplay::load(join('.', [$entity_type->id(), $bundle, 'default']));
-    $components = $display->getComponents();
+    $components = [];
+    if ($display = EntityFormDisplay::load(join('.', [$entity_type->id(), $bundle, 'default']))) {
+      $components = $display->getComponents();
+    }
 
     foreach ($fields as $field_name => $field) {
       // @todo should this form also allow updating the field label? (the Field form does)
