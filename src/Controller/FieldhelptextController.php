@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @copyright Copyright 2019, 2020 Palantir.net, Inc.
- */
-
 namespace Drupal\fieldhelptext\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -13,19 +9,30 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * Controller class to provide a list of links to field help text edit forms.
+ *
+ * @copyright Copyright 2019, 2020 Palantir.net, Inc.
+ */
 class FieldhelptextController extends ControllerBase {
 
   /**
+   * The entity_type.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
+   * The entity_field.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
 
   /**
+   * The entity_type.bundle.info service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $bundleInfoManager;
@@ -34,8 +41,11 @@ class FieldhelptextController extends ControllerBase {
    * FieldhelptextController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity_type.manager service.
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity_field.manager service.
    * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundleInfoManager
+   *   The entity_type.bundle.info service.
    */
   public function __construct(EntityTypeManagerInterface $entityTypeManager, EntityFieldManagerInterface $entityFieldManager, EntityTypeBundleInfoInterface $bundleInfoManager) {
     $this->entityTypeManager = $entityTypeManager;
@@ -50,6 +60,12 @@ class FieldhelptextController extends ControllerBase {
     return new static($container->get('entity_type.manager'), $container->get('entity_field.manager'), $container->get('entity_type.bundle.info'));
   }
 
+  /**
+   * Build the lists of links to help text edit forms by bundle and by field.
+   *
+   * @return array
+   *   A Drupal render array.
+   */
   public function main() {
     $output = [
       'bundle' => [
@@ -85,7 +101,11 @@ class FieldhelptextController extends ControllerBase {
 
     // List of links to administer by bundle.
     foreach ($fieldable_entity_types as $entity_type_name => $bundles) {
-      $output['bundle']["{$entity_type_name}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type_name];
+      $output['bundle']["{$entity_type_name}__title"] = [
+        '#type' => 'html_tag',
+        '#tag' => 'h3',
+        '#value' => $entity_type_name,
+      ];
 
       $output['bundle']["{$entity_type_name}"] = [
         '#type' => 'html_tag',
@@ -109,7 +129,7 @@ class FieldhelptextController extends ControllerBase {
       }
     }
 
-    // List of links to administer by field
+    // List of links to administer by field.
     foreach ($map as $entity_type => $fields) {
       $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type);
       $configurable_fields = array_diff_key($fields, $base_fields);
@@ -118,7 +138,11 @@ class FieldhelptextController extends ControllerBase {
         continue;
       }
 
-      $output['field']["{$entity_type}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type];
+      $output['field']["{$entity_type}__title"] = [
+        '#type' => 'html_tag',
+        '#tag' => 'h3',
+        '#value' => $entity_type,
+      ];
       $output['field']["{$entity_type}"] = [
         '#type' => 'html_tag',
         '#tag' => 'ul',

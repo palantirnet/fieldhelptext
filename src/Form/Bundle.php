@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @copyright Copyright 2019, 2020 Palantir.net, Inc.
- */
-
 namespace Drupal\fieldhelptext\Form;
 
 use Drupal\Core\Entity\Entity\EntityFormDisplay;
@@ -17,10 +13,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for editing help text for all fields on a bundle.
+ *
+ * @copyright Copyright 2019, 2020 Palantir.net, Inc.
  */
 class Bundle extends FormBase {
 
   /**
+   * The entity_field.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
@@ -29,6 +29,9 @@ class Bundle extends FormBase {
    * Constructs a new Field form object.
    *
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity_field.manager service.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   The messenger service.
    */
   public function __construct(EntityFieldManagerInterface $entityFieldManager, Messenger $messenger) {
     $this->entityFieldManager = $entityFieldManager;
@@ -86,8 +89,9 @@ class Bundle extends FormBase {
 
     // Retrieve the default form display in order to sort fields in the order
     // they appear on the form.
+    $default_form_id = implode('.', [$entity_type->id(), $bundle, 'default']);
     $components = [];
-    if ($display = EntityFormDisplay::load(join('.', [$entity_type->id(), $bundle, 'default']))) {
+    if ($display = EntityFormDisplay::load($default_form_id)) {
       $components = $display->getComponents();
     }
 

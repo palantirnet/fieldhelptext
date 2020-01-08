@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @copyright Copyright 2019 Palantir.net, Inc.
- */
-
 namespace Drupal\fieldhelptext\ParamConverter;
 
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -12,10 +8,14 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Route parameter converter for bundle ids.
+ *
+ * @copyright Copyright 2019 Palantir.net, Inc.
  */
 class BundleConverter implements ParamConverterInterface {
 
   /**
+   * The entity_type.bundle.info service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
    */
   protected $bundleInfo;

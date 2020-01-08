@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @copyright Copyright 2019, 2020 Palantir.net, Inc.
- */
-
 namespace Drupal\fieldhelptext\Form;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -16,10 +12,14 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for editing help text everywhere a field appears.
+ *
+ * @copyright Copyright 2019, 2020 Palantir.net, Inc.
  */
 class Field extends FormBase {
 
   /**
+   * The entity_field.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;
@@ -28,6 +28,9 @@ class Field extends FormBase {
    * Constructs a new Field form object.
    *
    * @param \Drupal\Core\Entity\EntityFieldManagerInterface $entityFieldManager
+   *   The entity_field.manager service.
+   * @param \Drupal\Core\Messenger\Messenger $messenger
+   *   The messenger service.
    */
   public function __construct(EntityFieldManagerInterface $entityFieldManager, Messenger $messenger) {
     $this->entityFieldManager = $entityFieldManager;

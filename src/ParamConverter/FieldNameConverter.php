@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @copyright Copyright 2020 Palantir.net, Inc.
- */
-
 namespace Drupal\fieldhelptext\ParamConverter;
 
 use Drupal\Core\Entity\EntityFieldManagerInterface;
@@ -12,10 +8,14 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Route parameter converter for field names to field configs.
+ *
+ * @copyright Copyright 2020 Palantir.net, Inc.
  */
 class FieldNameConverter implements ParamConverterInterface {
 
   /**
+   * The entity_field.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityFieldManagerInterface
    */
   protected $entityFieldManager;

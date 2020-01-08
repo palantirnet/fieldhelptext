@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @copyright Copyright 2019 Palantir.net, Inc.
- */
-
 namespace Drupal\fieldhelptext\ParamConverter;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -12,10 +8,14 @@ use Symfony\Component\Routing\Route;
 
 /**
  * Route parameter converter for entity types.
+ *
+ * @copyright Copyright 2019 Palantir.net, Inc.
  */
 class EntityTypeConverter implements ParamConverterInterface {
 
   /**
+   * The entity_type.manager service.
+   *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
