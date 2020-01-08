@@ -73,7 +73,7 @@ class Field extends FormBase {
     $form['title'] = [
       '#type' => 'html_tag',
       '#tag' => 'h3',
-      '#value' => $this->t('Edit help text for %field_name across all @entity_type bundles', [
+      '#value' => $this->t('Edit label and help text for %field_name across all @entity_type bundles', [
         '%field_name' => $field_name,
         '@entity_type' => $entity_type->getLabel(),
       ]),
@@ -87,13 +87,13 @@ class Field extends FormBase {
     $form['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Description'),
-      '#description' => '<p>Allowed HTML tags: &lt;a&gt; &lt;b&gt; &lt;big&gt; &lt;code&gt; &lt;del&gt; &lt;em&gt; &lt;i&gt; &lt;ins&gt; &lt;pre&gt; &lt;q&gt; &lt;small&gt; &lt;span&gt; &lt;strong&gt; &lt;sub&gt; &lt;sup&gt; &lt;tt&gt; &lt;ol&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt; &lt;br&gt; &lt;img&gt;</p><p>These fields support tokens.</p>',
+      '#description' => '<p>Allowed HTML tags: &lt;a&gt; &lt;b&gt; &lt;big&gt; &lt;code&gt; &lt;del&gt; &lt;em&gt; &lt;i&gt; &lt;ins&gt; &lt;pre&gt; &lt;q&gt; &lt;small&gt; &lt;span&gt; &lt;strong&gt; &lt;sub&gt; &lt;sup&gt; &lt;tt&gt; &lt;ol&gt; &lt;ul&gt; &lt;li&gt; &lt;p&gt; &lt;br&gt; &lt;img&gt;</p><p>This text area supports tokens.</p>',
       '#rows' => 2,
     ];
 
     $form['apply_to'] = [
       '#type' => 'checkboxes',
-      '#title' => $this->t('Update %entity_type field instances', ['%entity_type' => $entity_type->getLabel()]),
+      '#title' => $this->t('Select field instances to update', ['%entity_type' => $entity_type->getLabel()]),
       '#options' => [],
     ];
 
