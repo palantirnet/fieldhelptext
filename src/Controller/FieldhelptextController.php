@@ -8,8 +8,38 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FieldhelptextController extends ControllerBase {
+
+  /** @var EntityTypeManagerInterface */
+  protected $entityTypeManager;
+
+  /** @var EntityFieldManagerInterface */
+  protected $entityFieldManager;
+
+  /** @var EntityTypeBundleInfoInterface */
+  protected $bundleInfoManager;
+
+  /**
+   * FieldhelptextController constructor.
+   *
+   * @param EntityTypeManagerInterface $entityTypeManager
+   * @param EntityFieldManagerInterface $entityFieldManager
+   * @param EntityTypeBundleInfoInterface $bundleInfoManager
+   */
+  public function __construct(EntityTypeManagerInterface $entityTypeManager, EntityFieldManagerInterface $entityFieldManager, EntityTypeBundleInfoInterface $bundleInfoManager) {
+    $this->entityTypeManager = $entityTypeManager;
+    $this->entityFieldManager = $entityFieldManager;
+    $this->bundleInfoManager = $bundleInfoManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('entity_type.manager'), $container->get('entity_field.manager'), $container->get('entity_type.bundle.info'));
+  }
 
   public function main() {
     $output = [
@@ -21,15 +51,7 @@ class FieldhelptextController extends ControllerBase {
       ],
     ];
 
-    // @todo use dependency injection
-    /** @var EntityTypeManagerInterface $entity_type_manager */
-    $entity_type_manager = \Drupal::getContainer()->get('entity_type.manager');
-    /** @var EntityFieldManagerInterface $entity_field_manager */
-    $entity_field_manager = \Drupal::getContainer()->get('entity_field.manager');
-    /** @var EntityTypeBundleInfoInterface $bundle_info_manager */
-    $bundle_info_manager = \Drupal::getContainer()->get('entity_type.bundle.info');
-
-    $all_entity_types = $entity_type_manager->getDefinitions();
+    $all_entity_types = $this->entityTypeManager->getDefinitions();
     /** @var ContentEntityTypeInterface[] $fieldable_entity_types */
     $fieldable_entity_types = [];
     foreach ($all_entity_types as $entity_type_name => $entity_type) {
@@ -38,7 +60,7 @@ class FieldhelptextController extends ControllerBase {
       }
     }
 
-    $map = $entity_field_manager->getFieldMap();
+    $map = $this->entityFieldManager->getFieldMap();
 
     // List of links to administer by bundle
     foreach ($fieldable_entity_types as $entity_type_name => $entity_type) {
@@ -49,7 +71,7 @@ class FieldhelptextController extends ControllerBase {
         '#tag' => 'ul',
       ];
 
-      $bundles = $bundle_info_manager->getBundleInfo($entity_type_name);
+      $bundles = $this->bundleInfoManager->getBundleInfo($entity_type_name);
       foreach ($bundles as $bundle => $info) {
         $output['bundle']["{$entity_type_name}"][] = [
           '#type' => 'html_tag',
@@ -62,7 +84,7 @@ class FieldhelptextController extends ControllerBase {
     // List of links to administer by field
     // Count number of times field is used
     foreach ($map as $entity_type => $fields) {
-      $base_fields = $entity_field_manager->getBaseFieldDefinitions($entity_type);
+      $base_fields = $this->entityFieldManager->getBaseFieldDefinitions($entity_type);
       $configurable_fields = array_diff_key($fields, $base_fields);
 
       $output['field']["{$entity_type}__title"] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $entity_type];
